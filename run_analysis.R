@@ -39,4 +39,4 @@ joined$activity <- factor(joined$activity, labels=c("Walking","Walking Upstairs"
 melted <- melt(joined, id=c("subjectID", "activity"))
 tidy <- dcast(melted, subjectID+activity ~ variable, mean)
 
-write.csv(tidy, "tidy.csv", row.names=F)
+write.csv(tidy, "tidy.txt", row.names=F)
