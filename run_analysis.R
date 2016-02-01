@@ -1,6 +1,7 @@
 setwd("~/projects/coursera/Getting and Cleaning Data/project/tidydataproject/")
 
-library(tidyr)
+library(reshape2)
+
 ifelse(!dir.exists(file.path("./data/")), dir.create(file.path("./data/")), FALSE)
 
 source_data <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -8,7 +9,6 @@ download.file(source_data, "./data/data.zip", method = "curl")
 
 unzip("./data/data.zip", exdir = "./data/")
 
-# read data into data frames
 subject_train <- read.table("./data/UCI HAR Dataset/train/subject_train.txt")
 subject_test <- read.table("./data/UCI HAR Dataset/test/subject_test.txt")
 X_train <- read.table("./data/UCI HAR Dataset/train/X_train.txt")
@@ -36,3 +36,7 @@ joined$activity <- factor(joined$activity, labels=c("Walking","Walking Upstairs"
                           "Walking Downstairs", "Sitting", "Standing", "Laying"))
 
 
+melted <- melt(joined, id=c("subjectID", "activity"))
+tidy <- dcast(melted, subjectID+activity ~ variable, mean)
+
+write.csv(tidy, "tidy.csv", row.names=F)
